@@ -9,7 +9,7 @@ from random import choice
 class GithubNotifications(Flox):
 
     def _init_github(self):
-        self.gh = Github(self.settings['token'])
+        self.gh = Github(self.settings('token', ''))
 
     @utils.cache('gh.json', max_age=60)
     def main_search(self):
