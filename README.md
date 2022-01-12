@@ -15,7 +15,7 @@ You can create one by following going here: https://github.com/settings/tokens
 This `personal access token` requires the `notifications` scope to be enabled (See screenshot below).
 
 <details>
-<summary>Show screenshots</summary>
+<summary>Show screenshot</summary>
  
 ![image](https://user-images.githubusercontent.com/535299/149201391-8eaf058d-2733-4b65-8d0f-462534050c7e.png)
 </details>
