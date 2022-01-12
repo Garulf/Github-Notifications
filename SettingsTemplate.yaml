@@ -1,0 +1,7 @@
+body:
+  - type: passwordBox
+    attributes:
+      name: token
+      label: 'Personal access token:'
+      defaultValue: ""
+      description: Github.com Personal access token

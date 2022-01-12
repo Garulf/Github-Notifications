@@ -1,0 +1,2 @@
+git+https://github.com/garulf/flox@v0.9.6#egg=flox
+PyGithub==1.55
