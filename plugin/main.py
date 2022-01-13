@@ -103,9 +103,7 @@ class GithubNotifications(Flox):
                         json.dump(cache, f)
 
     def mark_read(self, id):
-        self._init_github()
-        self.gh.get_user().get_notification(id).mark_as_read()
-        self.cache_remove_result(id)
+        self.gh_mark_as_read(id)
         self.change_query(self.query, True)
 
     def refresh_cache(self):
@@ -120,9 +118,18 @@ class GithubNotifications(Flox):
 
     def open_url(self, url, id):
         self._init_github()
-        self.gh.get_user().get_notification(id).mark_as_read()
-        self.cache_remove_result(id)
+        self.gh_mark_as_read(id)
         webbrowser.open(url)
+
+    def gh_mark_as_read(self, id):
+        try:
+            self._init_github()
+            self.gh.get_user().get_notification(id).mark_as_read()
+            self.cache_remove_result(id)
+        except BadCredentialsException:
+            self.logger.error("Bad or missing Personal Access Token.")
+        except RateLimitExceededException:
+            self.logger.warning("Rate limit exceeded")
 
 if __name__ == "__main__":
     GithubNotifications()
