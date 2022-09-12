@@ -10,8 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
+      - uses: actions/checkout@v2
+      - name: get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+            path: 'plugin.json'
+            prop_path: 'Version'
+      - name: Bump release version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.version.outputs.prop }}
+          version-fragment: 'feature'
       - uses: ahmadnassri/action-dependabot-auto-merge@v2.4
         with:
-          github-token: ${{ secrets.AUTOMERGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           command: 'squash and merge'
           target: minor
