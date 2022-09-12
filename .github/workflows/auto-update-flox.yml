@@ -36,4 +36,7 @@ jobs:
           find: ${{ steps.reqs.outputs.content }}
           replace: ${{ fromJson(steps.myRequest.outputs.response).info.version }}
           regex: false
+      - name: Create Pull Request
+        if: ${{ steps.regex-match.outputs.match }} != ${{ steps.reqs.outputs.content }}
+        uses: peter-evans/create-pull-request@v4
 
