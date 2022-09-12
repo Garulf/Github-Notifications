@@ -1,1 +1,22 @@
+name: Auto Update Flox
 
+on:
+  workflow_dispatch:
+  
+jobs:
+  check_for_updates:
+    name: Check for Flox updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: action/checkout@v2
+      - name: Make Request
+        id: myRequest
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "https://pypi.python.org/pypi/flox-lib/json"
+      - name: Show Response
+        run: |
+          echo ${{ steps.myRequest.outputs.response }}
+          echo ${{ steps.myRequest.outputs.headers }}
+          echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
