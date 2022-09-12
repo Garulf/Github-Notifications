@@ -1,42 +1,23 @@
-name: Auto Update Flox
+name: Dependabot auto-merge
+on: pull_request
 
-on:
-  workflow_dispatch:
-  
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  check_for_updates:
-    name: Check for Flox updates
+  dependabot:
     runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      - name: Make Request
-        id: myRequest
-        uses: fjogeleit/http-request-action@v1
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.1
         with:
-          url: "https://pypi.python.org/pypi/flox-lib/json"
-          method: GET
-      - name: Show Response
-        run: |
-          echo ${{ fromJson(steps.myRequest.outputs.response).info.version }}
-      - name: Read package.json
-        id: reqs
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./requirements.txt
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: regex-match
-        with:
-          text: ${{ steps.reqs.outputs.content }}
-          regex: '^flox-lib[\=\>\<\!]{2}\d+\.\d+\.\d+$'
-      - name: Find and Replace
-        if: ${{ steps.regex-match.outputs.match }} != ${{ steps.reqs.outputs.content }}
-        uses: jacobtomlinson/gha-find-replace@v2
-        with:
-          find: ${{ steps.reqs.outputs.content }}
-          replace: ${{ fromJson(steps.myRequest.outputs.response).info.version }}
-          regex: false
-      - name: Create Pull Request
-        if: ${{ steps.regex-match.outputs.match }} != ${{ steps.reqs.outputs.content }}
-        uses: peter-evans/create-pull-request@v4
-
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{contains(steps.metadata.outputs.dependency-names, 'flox-lib') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
