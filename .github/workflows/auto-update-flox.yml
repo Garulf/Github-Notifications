@@ -19,3 +19,21 @@ jobs:
       - name: Show Response
         run: |
           echo ${{ fromJson(steps.myRequest.outputs.response).info.version }}
+      - name: Read package.json
+        id: reqs
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./requirements.txt
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ steps.reqs.outputs.content }}
+          regex: '^flox-lib[\=\>\<\!]{2}\d+\.\d+\.\d+$'
+      - name: Find and Replace
+        if: ${{ steps.regex-match.outputs.match != ${{ steps.reqs.outputs.content }}
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: ${{ steps.reqs.outputs.content }}
+          replace: ${{ fromJson(steps.myRequest.outputs.response).info.version }}
+          regex: false
+
