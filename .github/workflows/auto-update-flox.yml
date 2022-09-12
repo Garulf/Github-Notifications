@@ -15,6 +15,39 @@ jobs:
         uses: dependabot/fetch-metadata@v1.1.1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Get current version
+      - name: Read plugin.json
+        id: manifest
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./plugin.json
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ steps.manifest.outputs.content }}
+          regex: '^v\d+\.\d+\.\d+$'
+      - name: Bump release version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.manifest.outputs.content }}
+          version-fragment: 'feature'
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: '^v\d+\.\d+\.\d+$'
+          replace: "world"
+          regex: true
+      - name: commit
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "Bump version" -a
+      - name: Push changes
+        run:
+          git push
       - name: Enable auto-merge for Dependabot PRs
         if: ${{contains(steps.metadata.outputs.dependency-names, 'flox-lib') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         run: gh pr merge --auto --merge "$PR_URL"
