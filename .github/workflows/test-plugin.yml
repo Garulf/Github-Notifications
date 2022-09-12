@@ -33,7 +33,7 @@ jobs:
           path: './${{github.event.repository.name}}/plugin.json'
           prop_path: 'Version'
       - name: Assert Version updated
-        if: ${{ github.ref != 'refs/heads/main' }}
+        if: ${{ github.ref != 'refs/heads/main' }} && ${{ github.actor != 'dependabot[bot]' }}
         run: |
           $release_ver = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/${{github.repository}}/main/plugin.json" | ConvertFrom-Json).Version
           $release_ver = $release_ver -replace "v", "" 
