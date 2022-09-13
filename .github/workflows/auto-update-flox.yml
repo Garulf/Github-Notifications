@@ -15,36 +15,8 @@ jobs:
         uses: dependabot/fetch-metadata@v1.1.1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: get version
-        id: version
-        uses: notiz-dev/github-action-json-property@release
-        with: 
-            path: 'plugin.json'
-            prop_path: 'Version'
-      - name: Bump release version
-        id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{steps.version.outputs.prop}}
-          version-fragment: 'feature'
-      - name: Update version in plugin.json
-        uses: jossef/action-set-json-field@v2
-        with:
-          file: plugin.json
-          field: Version
-          value: ${{ steps.bump_version.outputs.next-version }}
-      - name: commit
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git checkout $GITHUB_HEAD_REF
-          git commit -am "Minor version bump"
-          git push
       - name: Enable auto-merge for Dependabot PRs
-        if: ${{contains(steps.metadata.outputs.dependency-names, 'flox-lib') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
+        if: ${{contains(steps.metadata.outputs.dependency-names, 'my-dependency') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
