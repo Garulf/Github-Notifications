@@ -17,28 +17,24 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Read plugin.json
-        id: manifest
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./plugin.json
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: regex-match
-        with:
-          text: ${{ steps.manifest.outputs.content }}
-          regex: '^v\d+\.\d+\.\d+$'
+      - name: get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+            path: 'plugin.json'
+            prop_path: 'Version'
       - name: Bump release version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{ steps.regex-match.outputs.match }}
+          current-version: ${{steps.version.outputs.prop}}
           version-fragment: 'feature'
-      - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@v2
+      - name: Update version in plugin.json
+        uses: jossef/action-set-json-field@v2
         with:
-          find: '^v\d+\.\d+\.\d+$'
-          replace: ${{ steps.bump_version.outputs.next-version }}
-          regex: true
+          file: plugin.json
+          field: Version
+          value: ${{ steps.bump_version.outputs.next-version }}
       - name: commit
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
