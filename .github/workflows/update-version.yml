@@ -1,7 +1,7 @@
 name: "Update Version"
 on:
   workflow_dispatch:
-  
+  workflow_call:
 jobs:
   update:
     runs-on: ubuntu-latest
