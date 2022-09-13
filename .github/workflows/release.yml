@@ -12,7 +12,12 @@ on:
 env:
   PYTHON_VER: 3.8
 jobs:
+  update-version:
+    uses: ./.github/workflows/update-version.yml
+    secrets:
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN}}
   deps:
+    needs: update-version
     if: ${{ github.ref == 'refs/heads/main' }}
     name: "Build"
     runs-on: windows-latest
