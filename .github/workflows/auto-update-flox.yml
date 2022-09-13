@@ -8,11 +8,19 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
     steps:
+      - name: 'Wait for status checks'
+        id: waitforstatuschecks
+        uses: WyriHaximus/github-action-wait-for-status@v1.2.0
+        with:
+          ignoreActions: worker,WIP
+          checkInterval: 60
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Dependabot metadata
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v1.3.3
       - name: Enable auto-merge for Dependabot PRs
-        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'flox-lib') && steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch'}}
+        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'flox-lib') && steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch'}} && steps.waitforstatuschecks.outputs.status == 'success'
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
