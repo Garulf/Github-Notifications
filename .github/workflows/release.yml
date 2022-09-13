@@ -1,4 +1,4 @@
-name: "Update"
+name: "Release"
 on:
   workflow_dispatch:
   push:
@@ -46,32 +46,6 @@ jobs:
         with: 
           path: 'plugin.json'
           prop_path: 'Version'
-      - name: Get main version
-        id: main_version
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: "https://raw.githubusercontent.com/${{github.repository}}/main/plugin.json"
-          method: 'GET'
-      - name: Bump release version
-        if: ${{ fromJson(steps.main_version.outputs.response).Version }} != ${{ steps.version.outputs.prop }}
-        id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{ steps.version.outputs.prop }}
-          version-fragment: 'bug'
-      - name: Update my-file.json description
-        if: ${{ fromJson(steps.main_version.outputs.response).Version }} != ${{ steps.version.outputs.prop }}
-        uses: jossef/action-set-json-field@v2
-        with:
-          file: plugin.json
-          field: Version
-          value: ${{ fromJson(steps.main_version.outputs.response).Version }} ${{ steps.bump_version.outputs.next-version }}
-      - name: Get Plugin's version
-        id: final_version
-        uses: notiz-dev/github-action-json-property@release
-        with: 
-          path: 'plugin.json'
-          prop_path: 'Version'
       - name: Package files
         run: |
           git clone https://github.com/Garulf/flow_commands/ bin
@@ -82,7 +56,7 @@ jobs:
         with:
           draft: false
           files: "./${{github.event.repository.name}}.zip"
-          tag_name: "v${{steps.final_version.outputs.prop}}"
+          tag_name: "v${{steps.version.outputs.prop}}"
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
