@@ -107,7 +107,3 @@ jobs:
         run: |
           cd ${{ env.PLUGIN_PATH }}
           python ${{steps.exe.outputs.prop}}
-  auto-merge:
-    needs: test_run
-    if: ${{ github.actor == 'dependabot[bot]' }}
-    uses: ./.github/workflows/auto-update-flox.yml
