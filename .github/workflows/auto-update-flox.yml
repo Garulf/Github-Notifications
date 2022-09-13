@@ -17,7 +17,6 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Get current version
       - name: Read plugin.json
         id: manifest
         uses: juliangruber/read-file-action@v1
