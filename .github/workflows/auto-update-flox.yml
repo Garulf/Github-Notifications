@@ -31,13 +31,13 @@ jobs:
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{ steps.regex-match.outputs.content }}
+          current-version: ${{ steps.regex-match.outputs.match }}
           version-fragment: 'feature'
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@v2
         with:
           find: '^v\d+\.\d+\.\d+$'
-          replace: "world"
+          replace: ${{ steps.bump_version.outputs.next-version }}
           regex: true
       - name: commit
         run: |
