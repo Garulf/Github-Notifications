@@ -31,7 +31,7 @@ jobs:
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{ steps.manifest.outputs.content }}
+          current-version: ${{ steps.regex-match.outputs.content }}
           version-fragment: 'feature'
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@v2
