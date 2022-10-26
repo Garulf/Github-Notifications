@@ -10,6 +10,7 @@ body:
       name: max_results
       label: "Max Results:"
       description: "Maxiumum number of results to return"
+      defaultValue: "30"
       options:
         - 10
         - 20
