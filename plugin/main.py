@@ -5,7 +5,16 @@ from github import Github
 from github.GithubException import BadCredentialsException, RateLimitExceededException
 from phrases import phrases
 from random import choice
+from pathlib import Path
+
 DEFAULT_MAX_RESULTS = 20
+UNREAD_ICON = Path(__file__).parent.joinpath('icons', 'unread2.png').resolve()
+READ_ICON = Path(__file__).parent.joinpath('icons', 'read.png').resolve()
+UNREAD_ICONS = {
+    True: UNREAD_ICON,
+    False: READ_ICON
+}
+
 
 class GithubNotifications(Flox):
 
@@ -15,25 +24,25 @@ class GithubNotifications(Flox):
     @utils.cache('gh.json', max_age=60)
     def main_search(self):
         self._init_github()
-        notifications = self.gh.get_user().get_notifications()
         max = self.settings.get('max_results', DEFAULT_MAX_RESULTS)
         notifications = self.gh.get_user().get_notifications(all=True)[:max]
         for notification in notifications:
             url = notification.subject.url
+            title = f"{notification.repository.full_name}"
             if notification.subject.type == "PullRequest":
-                pr = notification.get_pull_request()
-                url = pr.html_url
+                number = notification.subject.url.split('/')[-1]
+                title += f" #{number}"
             elif notification.subject.type == "Issue":
-                url = notification.get_issue().html_url
-            elif notification.subject.type == "Release":
-                header, data = notification._requester.requestJsonAndCheck("GET", notification.subject.url)
-                url = data["html_url"]
+                number = notification.subject.url.split('/')[-1]
+                title += f" #{number}"
             else:
-                url = notification.repository.html_url
-            subtitle = f"{notification.reason.title()} - {notification.repository.html_url}" 
+                title = f"{notification.subject.title} in {title}"
+            subtitle = F"[{notification.reason.title()}] {notification.subject.title}"
+            icon = UNREAD_ICONS[notification.unread]
             self.add_item(
-                title=notification.subject.title,
+                title=title,
                 subtitle=subtitle,
+                icon=icon,
                 method=self.open_url,
                 parameters=[url, notification.id],
                 context=[notification.id]
@@ -47,7 +56,6 @@ class GithubNotifications(Flox):
                 results.append(result)
         self._results = results
 
-    
     def query(self, query):
         try:
             self._results = self.main_search()
@@ -94,7 +102,6 @@ class GithubNotifications(Flox):
                 method=self.refresh_cache
             )
 
-
     def cache_remove_result(self, id):
         if utils.cache_path('gh.json').exists():
             with open(utils.cache_path('gh.json'), 'r') as f:
@@ -122,7 +129,11 @@ class GithubNotifications(Flox):
     def open_url(self, url, id):
         self._init_github()
         self.gh_mark_as_read(id)
-        webbrowser.open(url)
+        header, data = self.gh.get_user()._requester.requestJsonAndCheck(
+            "GET",
+            url
+        )
+        webbrowser.open(data['html_url'])
 
     def gh_mark_as_read(self, id):
         try:
@@ -133,6 +144,7 @@ class GithubNotifications(Flox):
             self.logger.error("Bad or missing Personal Access Token.")
         except RateLimitExceededException:
             self.logger.warning("Rate limit exceeded")
+
 
 if __name__ == "__main__":
     GithubNotifications()
