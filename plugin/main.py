@@ -24,7 +24,7 @@ class GithubNotifications(Flox):
     @utils.cache('gh.json', max_age=60)
     def main_search(self):
         self._init_github()
-        max = self.settings.get('max_results', DEFAULT_MAX_RESULTS)
+        max = int(self.settings.get('max_results', DEFAULT_MAX_RESULTS))
         notifications = self.gh.get_user().get_notifications(all=True)[:max]
         for notification in notifications:
             url = notification.subject.url
