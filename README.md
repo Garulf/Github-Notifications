@@ -1,4 +1,3 @@
-[![Test](https://github.com/Garulf/Github-Notifications/actions/workflows/test.yml/badge.svg)](https://github.com/Garulf/Github-Notifications/actions/workflows/test.yml)
 # Github-Notifications
 View your github notifications
 
