@@ -2,6 +2,18 @@ body:
   - type: passwordBox
     attributes:
       name: token
-      label: 'Personal access token:'
+      label: "Personal access token:"
       defaultValue: ""
       description: Github.com Personal access token
+  - type: dropdown
+    attributes:
+      name: max_results
+      label: "Max Results:"
+      description: "Maxiumum number of results to return"
+      options:
+        - 10
+        - 20
+        - 30
+        - 40
+        - 50
+        - 100
