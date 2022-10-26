@@ -5,6 +5,7 @@ from github import Github
 from github.GithubException import BadCredentialsException, RateLimitExceededException
 from phrases import phrases
 from random import choice
+DEFAULT_MAX_RESULTS = 20
 
 class GithubNotifications(Flox):
 
@@ -15,6 +16,8 @@ class GithubNotifications(Flox):
     def main_search(self):
         self._init_github()
         notifications = self.gh.get_user().get_notifications()
+        max = self.settings.get('max_results', DEFAULT_MAX_RESULTS)
+        notifications = self.gh.get_user().get_notifications(all=True)[:max]
         for notification in notifications:
             url = notification.subject.url
             if notification.subject.type == "PullRequest":
