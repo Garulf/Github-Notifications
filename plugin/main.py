@@ -21,7 +21,7 @@ class GithubNotifications(Flox):
     def _init_github(self):
         self.gh = Github(self.settings.get('token', ''))
 
-    @utils.cache('gh.json', max_age=60)
+    @utils.cache('gh.json', max_age=5)
     def main_search(self):
         self._init_github()
         max = int(self.settings.get('max_results', DEFAULT_MAX_RESULTS))
