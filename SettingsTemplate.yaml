@@ -18,3 +18,18 @@ body:
         - 40
         - 50
         - 100
+  - type: input
+    attributes:
+      name: title
+      label: "Title format:"
+      defaultValue: "{repo_owner}/{repo_name} {num_symbol}{number}"
+  - type: input
+    attributes:
+      name: subtitle
+      label: "Subtitle format:"
+      defaultValue: "{reason_title} {subject_title}"
+  - type: textBlock
+    attributes:
+      name: Formatting
+      description: >
+        Click website link below for more information on formatting.
