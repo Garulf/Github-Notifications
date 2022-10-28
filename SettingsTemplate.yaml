@@ -27,7 +27,7 @@ body:
     attributes:
       name: subtitle
       label: "Subtitle format:"
-      defaultValue: "{reason_title} {subject_title}"
+      defaultValue: "[{reason_title}] {subject_title}"
   - type: textBlock
     attributes:
       name: Formatting

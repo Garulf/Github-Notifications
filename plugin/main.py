@@ -16,7 +16,7 @@ UNREAD_ICONS = {
     False: READ_ICON
 }
 TITLE_TEMPLATE = "{repo_owner}/{repo_name} {num_symbol}{number}"
-SUBTITLE_TEMPLATE = "{reason_title} {subject_title}"
+SUBTITLE_TEMPLATE = "[{reason_title}] {subject_title}"
 
 
 class GithubNotifications(Flox):
