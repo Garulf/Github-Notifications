@@ -6,6 +6,7 @@ from github.GithubException import BadCredentialsException, RateLimitExceededExc
 from phrases import phrases
 from random import choice
 from pathlib import Path
+from .helper import format_string
 
 DEFAULT_MAX_RESULTS = 20
 UNREAD_ICON = Path(__file__).parent.joinpath('icons', 'unread2.png').resolve()
@@ -14,6 +15,8 @@ UNREAD_ICONS = {
     True: UNREAD_ICON,
     False: READ_ICON
 }
+TITLE_TEMPLATE = "{repo_owner}/{repo_name} {num_symbol}{number}"
+SUBTITLE_TEMPLATE = "{reason_title} {subject_title}"
 
 
 class GithubNotifications(Flox):
@@ -28,20 +31,12 @@ class GithubNotifications(Flox):
         notifications = self.gh.get_user().get_notifications(all=True)[:max]
         for notification in notifications:
             url = notification.subject.url
-            title = f"{notification.repository.full_name}"
-            if notification.subject.type == "PullRequest":
-                number = notification.subject.url.split('/')[-1]
-                title += f" #{number}"
-            elif notification.subject.type == "Issue":
-                number = notification.subject.url.split('/')[-1]
-                title += f" #{number}"
-            else:
-                title = f"{notification.subject.title} in {title}"
-            subtitle = F"[{notification.reason.title()}] {notification.subject.title}"
             icon = UNREAD_ICONS[notification.unread]
+            title_format = self.settings.get('title', TITLE_TEMPLATE)
+            subtitle_format = self.settings.get('subtitle', SUBTITLE_TEMPLATE)
             self.add_item(
-                title=title,
-                subtitle=subtitle,
+                title=format_string(title_format, notification),
+                subtitle=format_string(subtitle_format, notification),
                 icon=icon,
                 method=self.open_url,
                 parameters=[url, notification.id],
