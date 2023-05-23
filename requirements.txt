@@ -1,4 +1,4 @@
 flox-lib==0.19.6
 PyGithub==1.58.2
-requests==2.30.0
+requests==2.31.0
 chardet==5.1.0
