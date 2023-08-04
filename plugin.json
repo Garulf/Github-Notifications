@@ -4,7 +4,7 @@
   "Name": "Github Notifications",
   "Description": "View your github notifications",
   "Author": "Garulf",
-  "Version": "3.0.26",
+  "Version": "3.0.27",
   "Language": "python",
   "Website": "https://github.com/Garulf/github-notifications",
   "IcoPath": "./icon.png",
