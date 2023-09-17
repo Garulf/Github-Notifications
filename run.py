@@ -9,4 +9,5 @@ sys.path.append(os.path.join(plugindir, "plugin"))
 from plugin.main import GithubNotifications
 
 if __name__ == "__main__":
-    GithubNotifications()
+    gn = GithubNotifications()
+    gn.run()
