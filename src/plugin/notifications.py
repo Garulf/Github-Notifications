@@ -106,7 +106,11 @@ def notification_result(notification: dict) -> Result:
         icon=UNREAD_ICON if notification["unread"] else READ_ICON,
         context_data=[notification["id"]],
         preview=preview(subtitle),
-    ).add_action(open_url, [notification["subject"]["url"], notification["id"]])
+    ).add_action(open_url, [
+        notification["subject"]["url"],
+        notification["id"],
+        notification["repository"]["html_url"],
+    ])
 
 
 def search(query: str) -> List[Result]:
@@ -181,17 +185,17 @@ def refresh_cache():
     cache.clear()
 
 
-def resolve_html_url(subject_url: str, thread_id: str) -> str:
+def resolve_html_url(subject_url: Optional[str], thread_id: str, repository_url: str) -> str:
     client = github()
     client.mark_read(thread_id)
     cache.mark_read(thread_id)
-    return client.html_url(subject_url)
+    return client.html_url(subject_url) if subject_url else repository_url
 
 
 @plugin.on_method
-async def open_url(subject_url: str, thread_id: str):
+async def open_url(subject_url: Optional[str], thread_id: str, repository_url: str = ""):
     try:
-        url = await run_blocking(resolve_html_url, subject_url, thread_id)
+        url = await run_blocking(resolve_html_url, subject_url, thread_id, repository_url)
     except GithubError as error:
         await report_error(error)
         return

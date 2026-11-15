@@ -2,6 +2,7 @@ import asyncio
 import json
 
 import notifications
+from conftest import NOTIFICATIONS
 from github_api import BadCredentials, ConnectionFailed, RateLimitExceeded
 
 
@@ -37,7 +38,11 @@ def test_custom_formats_from_settings(github, settings):
 def test_result_opens_the_subject_and_carries_thread_id(github):
     result = run(notifications.query(""))[0].to_json()
     assert result["JsonRPCAction"]["Method"] == "open_url"
-    assert result["JsonRPCAction"]["Parameters"] == ["https://api.github.com/repos/octo-org/web-app/pulls/42", "101"]
+    assert result["JsonRPCAction"]["Parameters"] == [
+        "https://api.github.com/repos/octo-org/web-app/pulls/42",
+        "101",
+        "https://github.com/octo-org/web-app",
+    ]
     assert result["ContextData"] == ["101"]
     assert result["Preview"]["Description"] == "[Review_Requested] Add dark mode toggle"
     json.dumps(result)
@@ -120,6 +125,17 @@ def test_open_url_marks_read_and_opens_html_page(github, invoked):
     assert ("mark_read", "101") in github.calls
     assert invoked == [{"Method": "Flow.Launcher.OpenUrl", "Parameters": ["https://github.com/octo-org/web-app/pull/42", False]}]
     assert run(notifications.query(""))[0].icon == notifications.READ_ICON
+
+
+def test_notification_without_subject_url_opens_the_repository(github, invoked):
+    discussion = dict(NOTIFICATIONS[0], id="104", subject={"title": "Roadmap", "url": None, "type": "Discussion"})
+    github.notifications = [discussion]
+    (result,) = run(notifications.query(""))
+    assert result.title == "octo-org/web-app "
+    run(notifications.open_url(*result.json_rpc_action["Parameters"]))
+    assert ("mark_read", "104") in github.calls
+    assert [call for call in github.calls if call[0] == "html_url"] == []
+    assert invoked == [{"Method": "Flow.Launcher.OpenUrl", "Parameters": ["https://github.com/octo-org/web-app", False]}]
 
 
 def test_open_url_reports_errors(github, invoked):
