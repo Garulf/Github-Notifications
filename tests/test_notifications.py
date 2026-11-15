@@ -77,6 +77,14 @@ def test_no_notifications_shows_a_phrase(github):
     assert result.subtitle in notifications.phrases
 
 
+def test_missing_token_asks_for_one_without_calling_github(github, settings):
+    settings["token"] = "  "
+    (result,) = run(notifications.query(""))
+    assert result.title == "Add a GitHub personal access token"
+    assert result.json_rpc_action["Method"] == "Flow.Launcher.OpenSettingDialog"
+    assert github.calls == []
+
+
 def test_bad_credentials_points_to_settings(github):
     github.error = BadCredentials("Bad credentials")
     (result,) = run(notifications.query(""))

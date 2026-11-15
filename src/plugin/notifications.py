@@ -117,6 +117,11 @@ def search(query: str) -> List[Result]:
 
 @plugin.on_method
 async def query(query: str):
+    if not token():
+        return [settings_message(
+            "Add a GitHub personal access token",
+            "Set a token with the notifications scope in the plugin settings.",
+        )]
     try:
         results = await run_blocking(search, query)
     except BadCredentials:
