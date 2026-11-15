@@ -18,7 +18,7 @@ find "$build_dir" -name __pycache__ -prune -exec rm -rf {} +
 python3 -m pip install -r "$root/requirements.txt" \
   --target "$build_dir/plugin/site-packages" \
   --only-binary=:all: --platform any --python-version 3.8 --implementation py \
-  --quiet --disable-pip-version-check
+  --no-compile --quiet --disable-pip-version-check
 
 mkdir -p "$out_dir"
 zip_path="$(cd "$out_dir" && pwd)/Github-Notifications-${version}.zip"
