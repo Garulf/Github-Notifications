@@ -1,0 +1,21 @@
+{
+  "keyword": "gn",
+  "query": "web",
+  "icon": "../../data/icon.png",
+  "max_results": 2,
+  "selection": 0,
+  "results": [
+    {
+      "title": "octo-org/web-app #42",
+      "subtitle": "[Review_Requested] Add dark mode toggle",
+      "icon": "../../src/plugin/icons/unread2.png"
+    },
+    {
+      "title": "octo-org/web-app #39",
+      "subtitle": "[Comment] Login page flickers on Safari",
+      "icon": "../../src/plugin/icons/read.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": true
+}

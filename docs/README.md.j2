@@ -1,0 +1,97 @@
+{% extends "base.md.j2" %}
+
+{% block badges_extra %} [![Downloads](https://img.shields.io/github/downloads/{{ project.owner }}/{{ project.repo }}/total)]({{ project.url }}/releases/latest){% endblock %}
+
+{% block usage %}
+## Features
+
+* **Your inbox at a keystroke.** Type `gn` to list your latest notifications, with unread ones marked by their own icon.
+* **Open in the browser.** `Enter` opens the pull request, issue or release and marks it as read.
+* **Filter as you type.** `gn web` only shows notifications whose title contains "web".
+* **Clear the noise.** Mark one or all notifications as read from the context menu.
+* **Your own format.** Choose what the title and subtitle of each result show.
+
+## Usage
+
+Type `gn` to see your notifications:
+
+```
+gn
+```
+
+{{ screenshot("search", alt="GitHub notifications in Flow Launcher") }}
+
+Add some text to filter the results by title:
+
+{{ screenshot("filter", alt="Notifications filtered by repository") }}
+
+### Context menu
+
+Open the context menu (`Shift+Enter` or right-click) on a notification to mark it as read, mark
+everything as read, or fetch your notifications again:
+
+{{ screenshot("context", alt="Context menu with Mark as read, Mark all as read and Refresh Cache") }}
+
+## Installation
+
+### Flow Launcher
+
+In Flow Launcher, type:
+
+```
+pm install Github Notifications
+```
+
+{{ screenshot("install", alt="Flow Launcher plugin manager installing Github Notifications") }}
+
+### Manual installation
+
+Download `Github-Notifications-<version>.zip` from the [latest release]({{ project.url }}/releases/latest) and unzip it into
+`%appdata%\FlowLauncher\Plugins`, then restart Flow Launcher.
+
+Pre-releases of the next version are published from the open release PR on the
+[releases page]({{ project.url }}/releases) for testing. Flow Launcher won't offer them as updates.
+
+## Configuration
+
+The plugin needs a GitHub personal access token. Create a classic token at
+[github.com/settings/tokens](https://github.com/settings/tokens) with the `notifications` scope, then open
+**Settings → Plugins → Github Notifications** in Flow Launcher and paste it in:
+
+| Setting | Default | Description |
+| --- | --- | --- |
+| Personal access token | | A classic token with the `notifications` scope |
+| Max Results | `30` | The most notifications to fetch |
+| Title format | `{repo_owner}/{repo_name} {num_symbol}{number}` | The title of each result |
+| Subtitle format | `[{reason_title}] {subject_title}` | The subtitle of each result |
+
+The formats can use these fields:
+
+| Field | Example |
+| --- | --- |
+| `{repo_owner}` | `octo-org` |
+| `{repo_name}` | `web-app` |
+| `{repo_full_name}` | `octo-org/web-app` |
+| `{num_symbol}` | `#` for pull requests and issues, empty otherwise |
+| `{number}` | `42` for pull requests and issues, empty otherwise |
+| `{reason_title}` | `Mention`, `Review_Requested`, `Subscribed`, ... |
+| `{subject_title}` | `Add dark mode toggle` |
+| `{subject_url}` | The API URL of the pull request, issue or release |
+| `{release_title}` | `v2.0.0 in ` for anything that isn't a pull request or issue, empty otherwise |
+
+## Requirements
+
+* Flow Launcher 1.17.0 or newer
+* Python 3.8 or newer, which Flow Launcher can install for you
+
+## Changelog
+
+{{ changelog(3) }}
+
+See [CHANGELOG.md](CHANGELOG.md) for the full history.
+{% endblock %}
+
+{% block screenshots %}{% endblock %}
+{% block install %}{% endblock %}
+{% block contributing %}{% endblock %}
+{% block license %}{% endblock %}

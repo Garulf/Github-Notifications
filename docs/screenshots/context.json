@@ -1,0 +1,26 @@
+{
+  "keyword": "gn",
+  "query": "",
+  "icon": "../../data/icon.png",
+  "max_results": 3,
+  "selection": 0,
+  "results": [
+    {
+      "title": "Mark as read",
+      "subtitle": "Mark notification as read.",
+      "icon": "../../data/icon.png"
+    },
+    {
+      "title": "Mark all as read",
+      "subtitle": "Mark all notifications as read.",
+      "icon": "../../data/icon.png"
+    },
+    {
+      "title": "Refresh Cache",
+      "subtitle": "Refresh the cache.",
+      "icon": "../../data/icon.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": false
+}

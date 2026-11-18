@@ -1,0 +1,31 @@
+{
+  "keyword": "gn",
+  "query": "",
+  "icon": "../../data/icon.png",
+  "max_results": 4,
+  "selection": 0,
+  "results": [
+    {
+      "title": "octo-org/web-app #42",
+      "subtitle": "[Review_Requested] Add dark mode toggle",
+      "icon": "../../src/plugin/icons/unread2.png"
+    },
+    {
+      "title": "octo-org/cli #7",
+      "subtitle": "[Mention] Crash when the config file is empty",
+      "icon": "../../src/plugin/icons/unread2.png"
+    },
+    {
+      "title": "octo-org/cli ",
+      "subtitle": "[Subscribed] v2.0.0",
+      "icon": "../../src/plugin/icons/unread2.png"
+    },
+    {
+      "title": "octo-org/docs #118",
+      "subtitle": "[Author] Fix broken links in the setup guide",
+      "icon": "../../src/plugin/icons/read.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": true
+}

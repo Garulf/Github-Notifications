@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "simple",
+  "include-component-in-tag": false,
+  "always-update": true,
+  "bootstrap-sha": "21a2062ef5ca9a3355d627f5b3e8dc1dd340d967",
+  "packages": {
+    ".": {
+      "package-name": "Github-Notifications",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "data/plugin.json",
+          "jsonpath": "$.Version"
+        }
+      ]
+    }
+  }
+}
